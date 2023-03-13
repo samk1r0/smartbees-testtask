@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Promocode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -11,8 +12,8 @@ use Illuminate\Support\Facades\Hash;
 class OrderCreatedController extends Controller
 {
     public function __invoke(Request $request){
-        
-        $validated = $request->validate([
+
+        $validated = $request->validate([ // weryfikacja wymaganych pól zamówienia
             'email' => 'required|email',
             'delivery_method' => 'required|max:21',
             'payment_method' => 'required',
@@ -27,7 +28,7 @@ class OrderCreatedController extends Controller
             'terms_and_services_agreement' => 'accepted'
         ]);
 
-        if($request->password){
+        if($request->password){ // Jeżeli end-user chce stwórzyć konto - robi się weryfikacja haseł i w przypadku udanej weryfikacji tworzy się konto.
             $validated = $request->validate([
                 'password' => 'same:password_confirmation'
             ]);
@@ -38,8 +39,9 @@ class OrderCreatedController extends Controller
             $user->save();
         }
 
-        $order = new Order;
 
+        $order = new Order;
+        
         $order->email = $request->email;
         $order->delivery_method = $request->delivery_method;
         $order->payment_method = $request->payment_method;

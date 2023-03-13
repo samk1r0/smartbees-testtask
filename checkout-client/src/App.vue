@@ -92,7 +92,11 @@ import PaymentMethod from './components/PaymentMethod.vue'
                   <PaymentMethod v-if="bankTransferAvailable" title="Przelew bankowy - zwykły" id="banking-transfer" image="https://cdn-icons-png.flaticon.com/512/6404/6404655.png"/>
                 </div>
                 <a @click="showPromocodeField=!showPromocodeField" class="block text-center cursor-pointer py-3 w-full border-2 border-solid border-[#A89F8F] rounded mt-4 text-[#A89F8F]"><b><span v-if="!showPromocodeField">Dodaj</span><span v-else>Usuń</span> kod rabatowy</b></a>
-                <TextInput v-if="showPromocodeField" name="promocode" type="text" placeholder="Tu możesz wpisać kod rabatowy"/>
+                <form v-on:submit.prevent="checkPromo">
+                    <TextInput v-if="showPromocodeField" name="code" type="text" placeholder="Tu możesz wpisać kod rabatowy"/>
+                    <button class="bg-red" v-if="showPromocodeField" type="submit">Sprawdź kod</button>
+                    <p>{{ promocode_descirprion }}</p>
+                </form>
             </section>
             
             <section class=" w-full">
@@ -162,12 +166,36 @@ import { reactive } from 'vue';
                 additional_country:'',
                 additional_city:'',
                 additional_postal_code:'',
+                promo_active:'',
                 order : reactive({
                     id:''
-                })
+                }),
+                promo: reactive({
+                    code:'',
+                    dispatches:0,
+                    active:0
+                }),
+                promocode_descirprion:''
             }
         }, 
         methods:{
+            checkPromo(submitEvent){
+                this.promo.code=submitEvent.target.code.value
+                axios.defaults.baseURL = 'http://localhost:8000'
+                axios.post('/api/promo', this.promo).then(res=>{
+                    this.promo.active=res.data.is_active
+                    if(res.data.is_active==1 && this.promo.dispatches==0){
+                        this.summary=(parseFloat(this.summary)-10).toFixed(2).replace('.',',');
+                        this.promo.dispatches++;
+                        this.promocode_descirprion = 'Udało ci się obniżyć cenę zamówienia!';
+                    }
+                    else{
+                        console.log('Tym kodem nie obniżysz konieczną cenę');
+                        this.promocode_descirprion = 'Tym kodem nie obniżysz konieczną cenę';
+                    }
+                    console.log(res.data.is_active)
+                });
+            },  
             createOrder(submitEvent){
                 const formData = submitEvent.target;
                 if(this.password!=this.password_confirmation){
@@ -196,6 +224,8 @@ import { reactive } from 'vue';
                     terms_and_services_agreement: formData.agreement.checked,
                     comment: formData.comment.value,
                     summary: this.summary.replace(',', '.'),
+                    promo:this.promo.code,
+                    promo_active:this.promo.active,
                     product_id: 1,
                     products_quantity: 1,
                     additional_address:this.additional_address,
@@ -221,26 +251,28 @@ import { reactive } from 'vue';
                 }
             },
             deliveryResult(res) {
+                let discount;
+                this.promo.active == 1 ? discount = 10 : discount=0;
                 switch (res){
                     case 'InPost':
                         this.payUAvailable = true;
                         this.cashAvailable = true;
                         this.bankTransferAvailable = true;
-                        this.summary = (this.inpostPrice + this.summaryWihoutDelivery).toFixed(2);
+                        this.summary = (this.inpostPrice + this.summaryWihoutDelivery-discount).toFixed(2);
                         this.deliveryTypePrice=this.inpostPrice.toFixed(2).replace('.', ',');
                         break;
                     case 'Kurier DPD':
                         this.payUAvailable = true;
                         this.cashAvailable = true;
                         this.bankTransferAvailable = false;
-                        this.summary = (this.curierDpdPrice + this.summaryWihoutDelivery).toFixed(2);
+                        this.summary = (this.curierDpdPrice + this.summaryWihoutDelivery-discount).toFixed(2);
                         this.deliveryTypePrice=this.curierDpdPrice.toFixed(2).replace('.', ',');
                         break;
                     case 'Kurier DPD pobranie':
                         this.payUAvailable = false;
                         this.cashAvailable = true;
                         this.bankTransferAvailable = false;
-                        this.summary = (this.collectDpdPrice + this.summaryWihoutDelivery).toFixed(2);
+                        this.summary = (this.collectDpdPrice + this.summaryWihoutDelivery-discount).toFixed(2);
                         this.deliveryTypePrice=this.collectDpdPrice.toFixed(2).replace('.', ',');
                         break;
                 }

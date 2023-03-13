@@ -21,7 +21,7 @@
           if(this.type=='password'){
             this.$emit("emit-result", [this.$refs.password.value,this.$refs.password.name])
           }
-          else if(this.name=='additional_address'){
+          else if(this.name=='additional_address'|| this.name=='code'){
             this.$emit("emit-result", this.$refs.password.value)
           }
           ;
