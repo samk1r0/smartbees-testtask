@@ -28,4 +28,9 @@
 9. W tym samym folderze skompiluj aplikację za pomocą polecenia: <br>
 <code>npm run dev</code> <br>
 10. Po skompilowaniu frontendu można kliknąc na link, który pojawił się w konsoli po wykonaniu polecenia w katalogu /checkout-client.
-Wiarygodnie będzie to http://127.0.0.1:5173/
+Wiarygodnie będzie to http://127.0.0.1:5173/ <br>
+<hr style="border:2px solid gray">
+<h4>Opcjonalnie: </h4>
+Zeby sprawdzić jak działa formularz z kodami rabatowymi należy w tabeli promocodes stwórzyć przynajmniej jeden zapis z nazwą kodu(kolumna code) oraz wpisać w kolumnie is_active znaczenie 1 lub 0(czyli aktywny lub nieaktywny kod)
+
+Pozdrawiam serdecznie, Artem.
