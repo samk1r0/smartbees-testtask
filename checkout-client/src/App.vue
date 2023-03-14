@@ -129,7 +129,7 @@ import PaymentMethod from './components/PaymentMethod.vue'
                 <textarea placeholder="Komentarz" name="comment" id="" rows="3" class="mt-4 w-full rounded p-2 border border-solid border-grey"></textarea>
                 <Checkbox name="newsletter_allow"/>
                 <label class="cursor-pointer" for="newsletter_allow"> Zapisz się, aby otrzymywać newsletter</label> <br>
-                <Checkbox name="agreement"/>
+                <Checkbox name="agreement" required/>
                 <label class="cursor-pointer" for="agreement"> Zapoznałam/em się z <a class="text-blue-500" href="">Regulaminem</a> zakupów </label>
                 <button type="submit" class="mt-6 w-full rounded p-6 bg-rose-500 text-white"><b>POTWIERDŹ ZAKUP</b></button>
             </section>
