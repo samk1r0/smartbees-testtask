@@ -26,5 +26,6 @@
 8. W katalogu /checkout-client uruchom polecenie: <br>
 <code>npm i</code> <br>
 9. W tym samym folderze skompiluj aplikację za pomocą polecenia: <br>
-<code>npm run dev</code>
+<code>npm run dev</code> <br>
 10. Po skompilowaniu frontendu można kliknąc na link, który pojawił się w konsoli po wykonaniu polecenia w katalogu /checkout-client.
+Wiarygodnie będzie to http://127.0.0.1:5173/
