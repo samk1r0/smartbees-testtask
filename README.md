@@ -1,6 +1,6 @@
-### Strona Checkoutu dla sklepu
+<h2>Strona checkoutu dla sklepu. Zadanie testowe.</h2>
 <hr style="border:2px solid gray">
-<h2>Preferowana konfiguracja do testowania:</h2>
+<h4>Preferowana konfiguracja do testowania:</h2>
 <code>php8.1+</code><br>
 <code>nodejs: 14.19.0^</code><br>
 <code>npm: 6.14.16^</code><br>
